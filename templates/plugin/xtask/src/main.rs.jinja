@@ -1,0 +1,33 @@
+use clap::{Parser, Subcommand};
+
+#[derive(Parser)]
+#[command(name = "xtask")]
+struct Cli {
+    #[command(subcommand)]
+    command: Commands,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// Bundle the plugin
+    Bundle {
+        #[arg(long)]
+        release: bool,
+    },
+    /// Validate the plugin
+    Validate,
+}
+
+fn main() {
+    let cli = Cli::parse();
+    match cli.command {
+        Commands::Bundle { release } => {
+            println!("Bundling plugin (release: {})", release);
+            // TODO: Implement bundling
+        }
+        Commands::Validate => {
+            println!("Validating plugin...");
+            // TODO: Implement validation
+        }
+    }
+}

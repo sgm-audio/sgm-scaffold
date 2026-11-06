@@ -1,0 +1,14 @@
+use wasm_bindgen::prelude::*;
+
+/// Initialize the WASM module.
+#[wasm_bindgen(start)]
+pub fn start() {
+    // TODO: Initialize audio worklet
+}
+
+/// Process audio samples.
+#[wasm_bindgen]
+pub fn process(samples: &mut [f32]) {
+    // TODO: Implement DSP
+    let _ = samples;
+}

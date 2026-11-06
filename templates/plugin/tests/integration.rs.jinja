@@ -1,0 +1,16 @@
+use {{ crate_name }}::{{ struct_name }};
+use {{ crate_name }}::params::{{ struct_name }}Params;
+
+#[test]
+fn plugin_instantiates() {
+    let _plugin = {{ struct_name }}::default();
+}
+
+#[test]
+fn params_default_valid() {
+    let params = {{ struct_name }}Params::default();
+    // Gain should default to 0dB
+    assert_eq!(params.gain.value(), 0.0);
+    // Mix should default to 100%
+    assert_eq!(params.mix.value(), 100.0);
+}

@@ -1,0 +1,22 @@
+use criterion::{black_box, criterion_group, criterion_main, Criterion, BenchmarkId};
+
+fn bench_processing(c: &mut Criterion) {
+    let mut group = c.benchmark_group("{{ module_name }}");
+
+    for buffer_size in [64, 128, 256, 512, 1024] {
+        group.bench_with_input(
+            BenchmarkId::new("process", buffer_size),
+            &buffer_size,
+            |b, &size| {
+                let mut buffer = vec![0.5_f32; size * 2];
+                b.iter(|| {
+                    black_box(&mut buffer);
+                });
+            },
+        );
+    }
+    group.finish();
+}
+
+criterion_group!(benches, bench_processing);
+criterion_main!(benches);

@@ -1,0 +1,6 @@
+use {{ crate_name }}::hello;
+
+#[test]
+fn integration_test() {
+    assert_eq!(hello(), "Hello from {{ display_name }}!");
+}

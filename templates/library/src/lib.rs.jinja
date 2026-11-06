@@ -1,0 +1,23 @@
+//! {{ description }}
+//!
+//! © SGM Studios — All Rights Reserved
+
+#![deny(missing_docs)]
+
+/// Error types for this library.
+pub mod error;
+
+/// A sample function demonstrating the API.
+pub fn hello() -> &'static str {
+    "Hello from {{ display_name }}!"
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(hello(), "Hello from {{ display_name }}!");
+    }
+}

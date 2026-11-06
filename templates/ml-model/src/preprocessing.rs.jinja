@@ -1,0 +1,9 @@
+/// Audio preprocessing utilities.
+pub fn normalize(samples: &mut [f32]) {
+    let max = samples.iter().map(|s| s.abs()).fold(0.0_f32, f32::max);
+    if max > 0.0 {
+        for s in samples.iter_mut() {
+            *s /= max;
+        }
+    }
+}

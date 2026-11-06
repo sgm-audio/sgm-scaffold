@@ -1,0 +1,121 @@
+use nih_plug::prelude::*;
+use std::sync::Arc;
+
+pub mod dsp;
+pub mod editor;
+pub mod params;
+pub mod util;
+
+use dsp::processor::{{ struct_name }}Processor;
+use params::{{ struct_name }}Params;
+
+/// SGM Studios Plugin: {{ display_name }}
+///
+/// {{ description }}
+///
+/// © SGM Studios — All Rights Reserved
+pub struct {{ struct_name }} {
+    params: Arc<{{ struct_name }}Params>,
+    processor: {{ struct_name }}Processor,
+    sample_rate: f32,
+}
+
+impl Default for {{ struct_name }} {
+    fn default() -> Self {
+        Self {
+            params: Arc::new({{ struct_name }}Params::default()),
+            processor: {{ struct_name }}Processor::default(),
+            sample_rate: 44100.0,
+        }
+    }
+}
+
+impl Plugin for {{ struct_name }} {
+    const NAME: &'static str = "SGM {{ plugin_name }}";
+    const VENDOR: &'static str = "{{ author }}";
+    const URL: &'static str = "{{ repo_url }}";
+    const EMAIL: &'static str = "{{ author_email }}";
+    const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
+    const AUDIO_IO_LAYOUTS: &'static [AudioIOLayout] = &[
+        AudioIOLayout {
+            main_input_channels: NonZeroU32::new(2),
+            main_output_channels: NonZeroU32::new(2),
+            ..AudioIOLayout::const_default()
+        },
+        AudioIOLayout {
+            main_input_channels: NonZeroU32::new(1),
+            main_output_channels: NonZeroU32::new(1),
+            ..AudioIOLayout::const_default()
+        },
+    ];
+
+    type SysExMessage = ();
+    type BackgroundTask = ();
+
+    fn params(&self) -> Arc<dyn Params> {
+        self.params.clone()
+    }
+
+    fn initialize(
+        &mut self,
+        _audio_io_layout: &AudioIOLayout,
+        buffer_config: &BufferConfig,
+        _context: &mut impl InitContext<Self>,
+    ) -> bool {
+        self.sample_rate = buffer_config.sample_rate;
+        self.processor.prepare(buffer_config.sample_rate as f64, buffer_config.max_buffer_size);
+        true
+    }
+
+    fn reset(&mut self) {
+        self.processor.reset();
+    }
+
+    fn editor(&mut self, _async_executor: AsyncExecutor<Self>) -> Option<Box<dyn Editor>> {
+        editor::create_editor(self.params.clone())
+    }
+
+    fn process(
+        &mut self,
+        buffer: &mut Buffer,
+        _aux: &mut AuxiliaryBuffers,
+        context: &mut impl ProcessContext<Self>,
+    ) -> ProcessStatus {
+        // Report latency
+        context.set_latency_samples({{ latency_samples }});
+
+        let params = self.params.clone();
+        self.processor.process(buffer, &params);
+
+        // Report tail
+        let tail = {{ tail_ms }} * (self.sample_rate as u32) / 1000;
+        if tail > 0 {
+            ProcessStatus::Tail(tail)
+        } else {
+            ProcessStatus::Normal
+        }
+    }
+}
+
+impl ClapPlugin for {{ struct_name }} {
+    const CLAP_ID: &'static str = "com.sgmstudios.{{ module_name }}";
+    const CLAP_DESCRIPTION: Option<&'static str> = Some("{{ description }}");
+    const CLAP_MANUAL_URL: Option<&'static str> = Some("{{ repo_url }}");
+    const CLAP_SUPPORT_URL: Option<&'static str> = Some("{{ repo_url }}/issues");
+    const CLAP_FEATURES: &'static [ClapFeature] = &[
+        {% for feature in clap_features %}
+        ClapFeature::{{ feature }},
+        {% endfor %}
+    ];
+}
+
+impl Vst3Plugin for {{ struct_name }} {
+    const VST3_CLASS_ID: [u8; 16] = {{ class_id }};
+    const VST3_SUBCATEGORIES: &'static [Vst3SubCategory] = &[
+        Vst3SubCategory::{{ vst3_subcategory }},
+    ];
+}
+
+nih_export_clap!({{ struct_name }});
+nih_export_vst3!({{ struct_name }});

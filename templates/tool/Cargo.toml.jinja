@@ -1,0 +1,20 @@
+[package]
+name = "{{ crate_name }}"
+version = "0.1.0"
+edition = "{{ edition }}"
+license = "{{ license }}"
+repository = "{{ repo_url }}/{{ project_name }}"
+description = "{{ description }}"
+
+[[bin]]
+name = "{{ module_name }}"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive", "color"] }
+anyhow = "1"
+thiserror = "2"
+
+[profile.release]
+opt-level = 3
+lto = "thin"

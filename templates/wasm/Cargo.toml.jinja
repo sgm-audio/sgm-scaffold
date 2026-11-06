@@ -1,0 +1,19 @@
+[package]
+name = "{{ crate_name }}"
+version = "0.1.0"
+edition = "{{ edition }}"
+license = "{{ license }}"
+repository = "{{ repo_url }}/{{ project_name }}"
+description = "{{ description }}"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = ["AudioContext", "AudioNode"] }
+
+[profile.release]
+opt-level = "z"
+lto = true

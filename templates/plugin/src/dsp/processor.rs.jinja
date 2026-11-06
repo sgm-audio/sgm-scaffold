@@ -1,0 +1,35 @@
+use nih_plug::prelude::*;
+use crate::params::{{ struct_name }}Params;
+
+#[derive(Default)]
+pub struct {{ struct_name }}Processor {
+    // DSP state fields (pre-allocated, no heap allocation after init)
+}
+
+impl {{ struct_name }}Processor {
+    pub fn prepare(&mut self, _sample_rate: f64, _max_buffer_size: u32) {
+        // Pre-allocate all DSP resources here
+    }
+
+    pub fn process(&mut self, buffer: &mut Buffer, _params: &std::sync::Arc<{{ struct_name }}Params>) {
+        for mut channel_samples in buffer.iter_samples() {
+            let _gain = _params.gain.value();
+            let _mix = _params.mix.value();
+
+            for sample in channel_samples.iter_mut() {
+                // TODO: Implement DSP here
+                // *sample = *sample * gain_db_to_linear(gain);
+                let _ = sample;
+            }
+        }
+    }
+
+    pub fn reset(&mut self) {
+        // Clear delay lines, filter states, etc.
+    }
+}
+
+#[inline]
+fn gain_db_to_linear(db: f32) -> f32 {
+    10.0_f32.powf(db / 20.0)
+}

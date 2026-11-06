@@ -1,0 +1,31 @@
+[package]
+name = "{{ crate_name }}"
+version = "0.1.0"
+edition = "{{ edition }}"
+license = "{{ license }}"
+repository = "{{ repo_url }}/{{ project_name }}"
+description = "{{ description }}"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+nih_plug = { git = "https://github.com/robbert-vdh/nih-plug.git", features = ["assert_process_allocs"] }
+nih_plug_vizia = { git = "https://github.com/robbert-vdh/nih-plug.git" }
+serde = { version = "1", features = ["derive"] }
+
+[dev-dependencies]
+approx = "0.5"
+proptest = "1"
+criterion = "0.5"
+
+[[bench]]
+name = "processing"
+harness = false
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
+panic = "abort"

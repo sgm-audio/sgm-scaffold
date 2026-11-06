@@ -1,0 +1,23 @@
+# {{ display_name }}
+
+{{ description }}
+
+## Training
+
+```bash
+cd python
+pip install -r requirements.txt
+python train.py
+```
+
+## Inference (Rust)
+
+```rust
+use {{ crate_name }}::model::Model;
+let model = Model::new();
+let output = model.process(&input);
+```
+
+## License
+
+© SGM Studios. All rights reserved.

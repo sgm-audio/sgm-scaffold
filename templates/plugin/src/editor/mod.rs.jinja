@@ -1,0 +1,10 @@
+use nih_plug::prelude::*;
+use crate::params::{{ struct_name }}Params;
+
+pub mod components;
+pub mod theme;
+
+pub fn create_editor(_params: std::sync::Arc<{{ struct_name }}Params>) -> Option<Box<dyn Editor>> {
+    // TODO: Implement vizia editor
+    None
+}

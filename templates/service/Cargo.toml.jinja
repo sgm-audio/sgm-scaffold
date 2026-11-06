@@ -1,0 +1,25 @@
+[package]
+name = "{{ crate_name }}"
+version = "0.1.0"
+edition = "{{ edition }}"
+license = "{{ license }}"
+repository = "{{ repo_url }}/{{ project_name }}"
+description = "{{ description }}"
+
+[[bin]]
+name = "{{ module_name }}"
+path = "src/main.rs"
+
+[dependencies]
+axum = "0.8"
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+
+[profile.release]
+opt-level = 3
+lto = "thin"

@@ -1,0 +1,4 @@
+/// Parameter smoothing utilities.
+pub fn smooth_linear(current: f32, target: f32, coeff: f32) -> f32 {
+    current + (target - current) * coeff
+}

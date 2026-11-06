@@ -1,0 +1,37 @@
+use clap::{Parser, Subcommand};
+
+#[derive(Parser)]
+#[command(name = "{{ module_name }}")]
+#[command(about = "{{ description }}")]
+#[command(version)]
+pub struct Cli {
+    #[command(subcommand)]
+    pub command: Option<Commands>,
+}
+
+#[derive(Subcommand)]
+pub enum Commands {
+    /// Example command
+    Hello {
+        /// Name to greet
+        #[arg(short, long)]
+        name: Option<String>,
+    },
+}
+
+impl Cli {
+    pub fn run(self) -> anyhow::Result<()> {
+        match self.command {
+            Some(Commands::Hello { name }) => {
+                let name = name.unwrap_or_else(|| "world".to_string());
+                println!("Hello, {}!", name);
+                Ok(())
+            }
+            None => {
+                println!("{{ display_name }} v{}", env!("CARGO_PKG_VERSION"));
+                println!("Run with --help for usage.");
+                Ok(())
+            }
+        }
+    }
+}
