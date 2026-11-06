@@ -135,6 +135,10 @@ All generated projects follow SGM Studios standards:
 
 Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting PRs.
 
+## Contributors
+
+See [CONTRIBUTORS.md](CONTRIBUTORS.md) for a list of contributors. We welcome contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting PRs.
+
 ## License
 
 MIT OR Apache-2.0
