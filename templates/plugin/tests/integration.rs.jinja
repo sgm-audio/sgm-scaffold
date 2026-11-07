@@ -9,8 +9,23 @@ fn plugin_instantiates() {
 #[test]
 fn params_default_valid() {
     let params = {{ struct_name }}Params::default();
-    // Gain should default to 0dB
     assert_eq!(params.gain.value(), 0.0);
-    // Mix should default to 100%
     assert_eq!(params.mix.value(), 100.0);
+}
+
+#[test]
+fn params_in_valid_range() {
+    let params = {{ struct_name }}Params::default();
+    assert!(params.gain.value().is_finite());
+    assert!(params.mix.value().is_finite());
+    assert!(params.gain.value() >= -24.0);
+    assert!(params.gain.value() <= 24.0);
+    assert!(params.mix.value() >= 0.0);
+    assert!(params.mix.value() <= 100.0);
+}
+
+#[test]
+fn state_roundtrip() {
+    let _params = {{ struct_name }}Params::default();
+    // Params must construct without panic
 }

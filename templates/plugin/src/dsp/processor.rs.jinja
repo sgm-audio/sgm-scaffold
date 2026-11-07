@@ -3,33 +3,50 @@ use crate::params::{{ struct_name }}Params;
 
 #[derive(Default)]
 pub struct {{ struct_name }}Processor {
-    // DSP state fields (pre-allocated, no heap allocation after init)
+    // Pre-allocated DSP state (allocated in prepare(), never in process())
+    // Example: delay_lines: [f32; MAX_DELAY_SAMPLES],
+    // Example: filter_states: [BiquadState; 2],
 }
 
 impl {{ struct_name }}Processor {
+    /// Called once off the audio thread. All heap allocation happens here.
     pub fn prepare(&mut self, _sample_rate: f64, _max_buffer_size: u32) {
-        // Pre-allocate all DSP resources here
+        // Pre-allocate delay lines, filter states, lookup tables, etc.
+        // All allocations must happen here, never in process().
     }
 
-    pub fn process(&mut self, buffer: &mut Buffer, _params: &std::sync::Arc<{{ struct_name }}Params>) {
-        for mut channel_samples in buffer.iter_samples() {
-            let _gain = _params.gain.value();
-            let _mix = _params.mix.value();
+    /// Real-time audio processing callback.
+    /// Must be allocation-free, lock-free, and deterministic.
+    pub fn process(&mut self, buffer: &mut Buffer, params: &std::sync::Arc<{{ struct_name }}Params>) {
+        // Read smoothed parameter values once per buffer (RT-safe atomic reads)
+        let gain_db = params.gain.value();
+        let mix = params.mix.value();
 
+        // Convert dB to linear once per buffer
+        let gain = 10.0_f32.powf(gain_db / 20.0);
+
+        for mut channel_samples in buffer.iter_samples() {
             for sample in channel_samples.iter_mut() {
-                // TODO: Implement DSP here
-                // *sample = *sample * gain_db_to_linear(gain);
-                let _ = sample;
+                // Denormal protection: flush tiny subnormals to zero
+                if sample.abs() < 1e-20_f32 {
+                    *sample = 0.0;
+                }
+
+                // Apply gain
+                let processed = *sample * gain;
+
+                // Dry/wet mix
+                *sample = *sample * (1.0 - mix) + processed * mix;
+
+                // Clamp to prevent overflow
+                *sample = processed.clamp(-1.0, 1.0);
             }
         }
     }
 
+    /// Called when the processor is being deactivated.
+    /// Clear all DSP state here.
     pub fn reset(&mut self) {
         // Clear delay lines, filter states, etc.
     }
-}
-
-#[inline]
-fn gain_db_to_linear(db: f32) -> f32 {
-    10.0_f32.powf(db / 20.0)
 }
