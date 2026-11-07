@@ -151,6 +151,6 @@ This project uses AI-assisted development. AI-generated code is reviewed by huma
 
 <div align="center">
 
-*Built by [SGM Studios](https://github.com/SGM-Studios) — Next-Generation Audio Processing & Music Production Infrastructure*
+*Built by [SGM Studios](https://github.com/SGM-Studios) — Audio Processing & Music Production
 
 </div>
