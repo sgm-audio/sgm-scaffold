@@ -1,8 +1,7 @@
 use crate::error::{Result, ScaffoldError};
-use minijinja::{Environment, context};
+use minijinja::Environment;
 use rust_embed::RustEmbed;
 use serde::Serialize;
-use std::path::Path;
 
 #[derive(RustEmbed)]
 #[folder = "templates/"]
